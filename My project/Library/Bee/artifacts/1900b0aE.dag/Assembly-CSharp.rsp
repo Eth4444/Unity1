@@ -359,6 +359,7 @@
 "Assets/NatureStarterKit2/Standard Assets/Effects/ImageEffects/Scripts/Vortex.cs"
 "Assets/Rocks and Boulders 2/Shaders/RotateGameObject.cs"
 "Assets/scripts/BallCameraController.cs"
+"Assets/scripts/MouseCamLook.cs"
 "Assets/scripts/PlayerMovement.cs"
 -langversion:8.0
 
