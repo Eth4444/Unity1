@@ -4,24 +4,45 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
     CharacterController charCont;
 
-    private Vector3 moveDirection = Vector3.zero;
-    public float speed = 10f;
-    // Start is called before the first frame update
-    void Start()
+    private Vector3 moveDirection = Vector3.zero;   //Creates a new vector3 variable that will be used to define how the player will move. Gives it an initial value of zero for all three values.
+    public float speed = 10f;                       //Creates a new float variable that will store a speed modifier for the player. "f" denotes the number as a float value. "public" will create a little box in the inspector that you can modify.
+    public float gravity = 20f;
+    public float jumpSpeed = 8f;
+
+    private void Start()        //Anything here will happen at the start of the scene.
     {
-        charCont = GetComponent<CharacterController>();  
+        charCont = GetComponent<CharacterController>(); //Finds and stores the reference to the character controller component
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
 
-        moveDirection = transform.right * moveX + transform.forward * moveZ;
-        charCont.Move(moveDirection * speed * Time.deltaTime);
+    void Update()              //Anything here happens once per frame.
+    {
+        if (charCont.isGrounded)    //Checks to see if the player is on the ground.
+        {   //Everything in here runs ONLY if the player is on the ground during the current frame.
+            float moveX = Input.GetAxis("Horizontal");  //Stores keyboard input into float variables
+            float moveZ = Input.GetAxis("Vertical");
+
+            //Converts keyboard input stored in moveX and moveZ to a Vector3, so it can be used for movement.
+            //Exercise: try making moveDirection = transform.right; Remove everything else. See what happens. Now try to make it transform.forward. See what happens. Enable both. Enable one, and put a zero. Enable one and put 100. Play around with this code and get a feel for what these do.
+            moveDirection = transform.right * moveX + transform.forward * moveZ; //transform.right gets a numerical value for left/right movement. Forward gets forward/back movement. Multiply each by the input for X (horizontal) and Z (vertical) to build a Vector 3 for movement. Does not actually move the player yet.          
+            moveDirection *= speed;                                              //Speed multiplier for movement.
+
+            if (Input.GetButton("Jump"))        //If the jump button is pressed.
+            {
+                moveDirection.y = jumpSpeed;    //Adjust the y coordinates of the moveDirection Vector3 variable when the jump button is pressed.
+            }
+
+        }
+
+
+
+        //This is where we apply gravity. Gravity is multipled by Time.deltaTime twice - here and below where we actually move the character controller. This is because gravity accelerates, and is defined in terms of meters per second squared. The squared part is why we multiply by deltaTime twice.  
+        moveDirection.y -= gravity * Time.deltaTime;
+
+
+        charCont.Move(moveDirection * Time.deltaTime);  //Actually moves the GameObject with the character controller on it.
+
     }
 }
